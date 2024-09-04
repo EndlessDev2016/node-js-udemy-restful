@@ -13,7 +13,7 @@ import chalk from 'chalk';
 
 import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize('node-complete', 'root', 'dltmdgns', {
+const sequelize = new Sequelize('node-complete-restful-api', 'root', 'dltmdgns', {
   dialect: 'mysql',
   host: 'localhost',
   logging: (msg) => {

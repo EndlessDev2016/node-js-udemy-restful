@@ -5,7 +5,7 @@ import sequelize from '../util/database.mjs';
  * title: string required
  * imageUrl: string required
  * content: string required
- * creator: string required
+ * creator: object required
  * timestamps: true
  *
  */
@@ -31,12 +31,12 @@ const Post = sequelize.define(
       allowNull: false,
     },
     creator: {
-      type: DataTypes.STRING,
+      type: DataTypes.JSON, // Object型に相当するデータ型としてJSONを使用
       allowNull: false,
     },
   },
   {
-    timestamps: true,
+    timestamps: true, // mongooseのtimestampsオプションに相当する
   }
 );
 

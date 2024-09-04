@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import sequelize from './util/database.mjs';
 import chalk from 'chalk';
+import feedRoutes from './routes/feed.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,6 +24,15 @@ app.use((req, res, next) => {
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
+});
+
+app.use('/feed', feedRoutes);
+
+app.use((error, req, res, next) => {
+  console.error(chalk.bgRedBright(message));
+  const status = error.statusCode || 500;
+  const message = error.message;
+  res.status(status).json({ message: message });
 });
 
 // // mysql session store options
@@ -122,10 +132,11 @@ sequelize
      * Not recommended for production use.
      * If not further configured deletes data in columns that were removed or had their type changed in the model.
      */
+    // force: true
     // alter: true,
   })
   .then((cart) => {
-    app.listen(3000);
+    app.listen(8080);
   })
   .catch((err) => {
     console.log(err);
