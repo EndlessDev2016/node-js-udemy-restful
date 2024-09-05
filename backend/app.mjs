@@ -53,9 +53,9 @@ app.use((req, res, next) => {
 app.use('/feed', feedRoutes);
 
 app.use((error, req, res, next) => {
-  console.error(chalk.bgRedBright(message));
   const status = error.statusCode || 500;
   const message = error.message;
+  console.error(chalk.bgRedBright(message));
   res.status(status).json({ message: message });
 });
 

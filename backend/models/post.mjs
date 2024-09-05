@@ -12,7 +12,7 @@ import sequelize from '../util/database.mjs';
 const Post = sequelize.define(
   'post',
   {
-    id: {
+    _id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       allowNull: false,

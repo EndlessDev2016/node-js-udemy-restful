@@ -1,5 +1,11 @@
 import { validationResult } from 'express-validator';
 import Post from '../models/post.mjs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import fs from 'fs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const getPosts = (req, res, next) => {
   Post.findAll()
@@ -76,4 +82,60 @@ export const getPost = (req, res, next) => {
       // throw err; // これを使うとエラーハンドリングができるが、middlewareまでに到達しない。
       next(err);
     });
+};
+
+export const updatePost = (req, res, next) => {
+  const postId = req.params.postId;
+  const title = req.body.title;
+  const content = req.body.content;
+  let imageUrl = req.body.image;
+
+  if (req.file) {
+    imageUrl = req.file.path;
+  }
+
+  if (!imageUrl) {
+    const error = new Error('No file picked.');
+    error.statusCode = 422;
+    throw error;
+  }
+
+  Post.findByPk(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error('Could not find post.');
+        error.statusCode = 404;
+        throw error;
+      }
+
+      // アップロードされた画像が異なる場合、古い画像を削除する。
+      if (imageUrl !== post.imageUrl) {
+        clearImage(post.imageUrl);
+      }
+
+      post.title = title;
+      post.imageUrl = imageUrl;
+      post.content = content;
+      return post.save();
+    })
+    .then((result) => {
+      res.status(200).json({ message: 'Post updated!', post: result });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      // throw err; // これを使うとエラーハンドリングができるが、middlewareまでに到達しない。
+      next(err);
+    });
+};
+
+/**
+ * @param {string} filePath
+ * @description Clear image
+ */
+const clearImage = (filePath) => {
+  // TODO: clear image
+  filePath = path.join(__dirname, '..', filePath);
+  fs.unlink(filePath, (err) => console.log(err));
 };
