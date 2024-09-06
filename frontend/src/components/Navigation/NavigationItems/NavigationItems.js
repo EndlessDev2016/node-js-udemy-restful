@@ -12,7 +12,7 @@ const navItems = [
 const navigationItems = props => [
   ...navItems.filter(item => item.auth === props.isAuth).map(item => (
     <li
-      key={item.id}
+      key={item._id}
       className={['navigation-item', props.mobile ? 'mobile' : ''].join(' ')}
     >
       <NavLink to={item.link} exact onClick={props.onChoose}>

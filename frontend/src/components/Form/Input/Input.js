@@ -4,7 +4,7 @@ import './Input.css';
 
 const input = props => (
   <div className="input">
-    {props.label && <label htmlFor={props.id}>{props.label}</label>}
+    {props.label && <label htmlFor={props._id}>{props.label}</label>}
     {props.control === 'input' && (
       <input
         className={[
@@ -12,11 +12,11 @@ const input = props => (
           props.touched ? 'touched' : 'untouched'
         ].join(' ')}
         type={props.type}
-        id={props.id}
+        id={props._id}
         required={props.required}
         value={props.value}
         placeholder={props.placeholder}
-        onChange={e => props.onChange(props.id, e.target.value, e.target.files)}
+        onChange={e => props.onChange(props._id, e.target.value, e.target.files)}
         onBlur={props.onBlur}
       />
     )}
@@ -26,11 +26,11 @@ const input = props => (
           !props.valid ? 'invalid' : 'valid',
           props.touched ? 'touched' : 'untouched'
         ].join(' ')}
-        id={props.id}
+        id={props._id}
         rows={props.rows}
         required={props.required}
         value={props.value}
-        onChange={e => props.onChange(props.id, e.target.value)}
+        onChange={e => props.onChange(props._id, e.target.value)}
         onBlur={props.onBlur}
       />
     )}
