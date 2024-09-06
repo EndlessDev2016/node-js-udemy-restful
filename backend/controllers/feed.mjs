@@ -3,16 +3,45 @@ import Post from '../models/post.mjs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import chalk from 'chalk';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const getPosts = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 2;
+  let totalItems;
+  // mongooseは、Post.find().countDocuments()を使うことができる。
+  // sequelizeは、Post.count()を使う。
+  console.log(chalk.bgYellowBright('getPosts -  Post.count() executed.'));
+  Post.count()
+    .then((count) => {
+      // totalItemsにcountを代入
+      totalItems = count;
+      // mongooseは、Post.find().skip().limit()を使うことができる。
+      // return Post.find()
+      //  .skip((currentPage - 1) * perPage)
+      //  .limit(perPage);
+      // sequelizeは、以下のように書く。
+      return Post.findAll({
+        offset: (currentPage - 1) * perPage,
+        limit: perPage,
+      });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    });
+
   Post.findAll()
     .then((posts) => {
       res.status(200).json({
         message: 'Fetched posts successfully.',
         posts,
+        totalItems,
       });
     })
     .catch((err) => {
@@ -120,6 +149,34 @@ export const updatePost = (req, res, next) => {
     })
     .then((result) => {
       res.status(200).json({ message: 'Post updated!', post: result });
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      // throw err; // これを使うとエラーハンドリングができるが、middlewareまでに到達しない。
+      next(err);
+    });
+};
+
+export const deletePost = (req, res, next) => {
+  // TODO: delete post
+  const postId = req.params.postId;
+  Post.findByPk(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error('Could not find post.');
+        error.statusCode = 404;
+        throw error;
+      }
+      clearImage(post.imageUrl);
+      // mongooseは、findByIdAndRemove()を使うことができる。
+      // sequelizeは、destroy()を使う。
+      return Post.destroy({ where: { _id: postId } });
+    })
+    .then((result) => {
+      console.log(chalk.bgGreenBright(result));
+      res.status(200).json({ message: 'Deleted post.' });
     })
     .catch((err) => {
       if (!err.statusCode) {

@@ -266,7 +266,7 @@ export const getNewPassword = (req, res, next) => {
       res.render('auth/new-password', {
         path: '/new-password',
         pageTitle: 'New Password',
-        userId: user.id.toString(),
+        userId: user._id.toString(),
         passwordToken: token,
         isAuthenticated: false,
       });

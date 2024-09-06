@@ -55,7 +55,7 @@ export const postAddProduct = (req, res, next) => {
   // https://sequelize.org/docs/v6/core-concepts/assocs/#special-methodsmixins-added-to-instances
   // User.hasMany(Product);
 
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => {
       return user.createProduct({
         title: title,
@@ -77,7 +77,7 @@ export const postAddProduct = (req, res, next) => {
     //   price: price,
     //   imageUrl: imageUrl,
     //   description: description,
-    //   user: req.user.id
+    //   user: req.user._id
     // })
     .then((result) => {
       console.log("Created Product :: ", result);
@@ -96,7 +96,7 @@ export const getEditProduct = (req, res, next) => {
   const prodId = req.params.productId;
   // User.hasMany(Product)のため、associated methodを利用可能。
 
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) =>
       user.getProducts({
         where: {
@@ -148,7 +148,7 @@ export const postEditProduct = (req, res, next) => {
 
   Product.findByPk(prodId)
     .then((product) => {
-      if (product.userId.toString() !== req.session.user.id.toString()) {
+      if (product.userId.toString() !== req.session.user._id.toString()) {
         return res.redirect("/");
       }
       // 値を更新する（上書き）
@@ -177,10 +177,10 @@ export const getProducts = (req, res, next) => {
   Product.findAll({
     // 一時的にコメントすると、全てのProductが表示される。
     where: {
-      userId: req.session.user.id,
+      userId: req.session.user._id,
     },
   })
-    // User.findByPk(req.session.user.id)
+    // User.findByPk(req.session.user._id)
     // .then((user) => user.getProducts())
     // Product.findAll()
     .then((products) => {
@@ -206,7 +206,7 @@ export const postDeleteProduct = (req, res, next) => {
       Product.destroy({
         where: {
           id: prodId,
-          userId: req.session.user.id,
+          userId: req.session.user._id,
         },
       })
         // .then((product) => {
@@ -219,7 +219,7 @@ export const postDeleteProduct = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 
-  // ProductのuserIdがreq.session.user.idと一致する場合のみ、削除する。
+  // ProductのuserIdがreq.session.user._idと一致する場合のみ、削除する。
   // 他のユーザのProductを削除することはできない。
   // つまり、自分のProductのみ削除できる。
 };

@@ -131,7 +131,7 @@ export const getIndex = (req, res, next) => {
 };
 
 export const getCart = (req, res, next) => {
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => user.getCart())
     .then((cart) => {
       /**
@@ -170,9 +170,9 @@ export const getCart = (req, res, next) => {
   //       const cartProducts = [];
 
   //       for (let product of products) {
-  //         if (cart.products.find((prod) => prod.id === product.id)) {
+  //         if (cart.products.find((prod) => prod._id === product._id)) {
   //           const cartProductData = cart.products.find(
-  //             (prod) => prod.id === product.id
+  //             (prod) => prod._id === product._id
   //           );
 
   //           cartProducts.push({
@@ -198,7 +198,7 @@ export const postCart = (req, res, next) => {
   let product;
   let newQuantity = 1;
 
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => user.getCart())
     .then((cart) => {
       console.log(chalk.green("postCart - user.getCart() ::"), cart);
@@ -240,7 +240,7 @@ export const postCart = (req, res, next) => {
 export const postCartDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
 
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => user.getCart())
     .then((cart) => {
       console.log(
@@ -280,7 +280,7 @@ export const postCartDeleteProduct = (req, res, next) => {
 export const postOrder = (req, res, next) => {
   let fetchedCart;
 
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => user.getCart())
     .then((cart) => {
       fetchedCart = cart;
@@ -292,7 +292,7 @@ export const postOrder = (req, res, next) => {
         chalk.green("postOrder (then) - getProducts() :: "),
         products
       );
-      return User.findByPk(req.session.user.id)
+      return User.findByPk(req.session.user._id)
         .then((user) => user.createOrder())
         .then((order) => {
           console.log(
@@ -319,7 +319,7 @@ export const postOrder = (req, res, next) => {
 };
 
 export const getOrders = (req, res, next) => {
-  User.findByPk(req.session.user.id)
+  User.findByPk(req.session.user._id)
     .then((user) => user.getOrders({ include: ["products"] }))
     .then((orders) => {
       console.log(chalk.green("getOrders (then) - getOrders() :: "), orders);
@@ -349,7 +349,7 @@ export const getInvoice = (req, res, next) => {
       if (!order) {
         return next(new Error("No order found."));
       }
-      if (order.userId !== req.session.user.id) {
+      if (order.userId !== req.session.user._id) {
         return next(new Error("Unauthorized"));
       }
       const invoiceName = "invoice-" + orderId + ".pdf";

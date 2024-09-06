@@ -21,7 +21,7 @@
 //       }
 
 //       const existingProductIndex = cart.products.findIndex(
-//         (prod) => prod.id === id
+//         (prod) => prod._id === id
 //       );
 //       const existingProduct = cart.products[existingProductIndex];
 //       let updatedProduct;
@@ -48,7 +48,7 @@
 //       }
 
 //       const updatedCart = { ...JSON.parse(fileContent) };
-//       const product = updatedCart.products.find((prod) => prod.id === id);
+//       const product = updatedCart.products.find((prod) => prod._id === id);
 //       console.log('product :: ', product);
 //       if (!product) {
 //         // product not found
@@ -58,7 +58,7 @@
 //       const productQty = product.qty;
 
 //       updatedCart.products = updatedCart.products.filter(
-//         (prod) => prod.id !== id
+//         (prod) => prod._id !== id
 //       );
 
 //       updatedCart.totalPrice =

@@ -20,7 +20,7 @@ const Cart = require('./cart');
 
 module.exports = class Product {
   constructor(id, title, imageUrl, description, price) {
-    this.id = id;
+    this._id = id;
     this.title = title;
     this.imageUrl = imageUrl;
     this.description = description;
@@ -37,9 +37,9 @@ module.exports = class Product {
     );
     // getProductsFromFile((products) => {
     //   // 既存の商品情報を更新する
-    //   if (this.id) {
+    //   if (this._id) {
     //     const existingProductIndex = products.findIndex(
-    //       (p) => p.id === this.id
+    //       (p) => p._id === this._id
     //     );
 
     //     const updatedProducts = [...products];
@@ -51,7 +51,7 @@ module.exports = class Product {
     //     });
     //   } else {
     //     // 新規商品情報を追加する
-    //     this.id = Math.random().toString();
+    //     this._id = Math.random().toString();
     //     products.push(this);
     //     fs.writeFile(p, JSON.stringify(products), (err) => {
     //       console.log(err);
@@ -62,8 +62,8 @@ module.exports = class Product {
 
   static deleteById(id) {
     // getProductsFromFile((products) => {
-    //   const product = products.findIndex((p) => p.id === id);
-    //   const updatedProducts = products.filter((p) => p.id !== id);
+    //   const product = products.findIndex((p) => p._id === id);
+    //   const updatedProducts = products.filter((p) => p._id !== id);
     //   fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
     //     if (!err) {
     //       // 商品情報の削除に成功したら、カートからも削除する
@@ -82,11 +82,11 @@ module.exports = class Product {
 
   static findById(id, cb) {
     // getProductsFromFile((products) => {
-    //   const product = products.find((p) => p.id === id);
+    //   const product = products.find((p) => p._id === id);
     //   cb(product);
     // });
 
-    return db.execute(`SELECT * FROM products WHERE products.id = ?`, [id]);
+    return db.execute(`SELECT * FROM products WHERE products._id = ?`, [id]);
   }
 };
  */

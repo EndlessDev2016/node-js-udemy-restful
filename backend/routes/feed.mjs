@@ -1,6 +1,7 @@
 import express from 'express';
 import {
   createPost,
+  deletePost,
   getPost,
   getPosts,
   updatePost,
@@ -31,5 +32,7 @@ feedRoutes.put(
   ],
   updatePost
 );
+
+feedRoutes.delete('/post/:postId', deletePost);
 
 export default feedRoutes;

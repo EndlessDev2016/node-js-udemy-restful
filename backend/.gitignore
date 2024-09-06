@@ -1,0 +1,5 @@
+# local files imageは、gitにあげない
+/images
+
+# node_modulesは、gitにあげない
+/node_modules
