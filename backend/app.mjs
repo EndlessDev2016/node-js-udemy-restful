@@ -6,6 +6,8 @@ import sequelize from './util/database.mjs';
 import chalk from 'chalk';
 import feedRoutes from './routes/feed.mjs';
 import multer from 'multer';
+import User from './models/user.mjs';
+import Post from './models/post.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -55,8 +57,25 @@ app.use('/feed', feedRoutes);
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
+  const data = error.data;
   console.error(chalk.bgRedBright(message));
-  res.status(status).json({ message: message });
+  res.status(status).json({ message, data });
+});
+
+// seqliizeのは、foreign keyを設定しなくても、
+// テーブルの関係(relation)を見て、自動的に設定してくれる。
+User.hasMany(Post, {
+  // foreignKey: {
+  //   name: 'userId',
+  //   allowNull: false,
+  // },
+});
+
+Post.belongsTo(User, {
+  // foreignKey: {
+  //   name: 'userId',
+  //   allowNull: false,
+  // },
 });
 
 // // mysql session store options
