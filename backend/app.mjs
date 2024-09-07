@@ -8,6 +8,7 @@ import feedRoutes from './routes/feed.mjs';
 import multer from 'multer';
 import User from './models/user.mjs';
 import Post from './models/post.mjs';
+import authRouter from './routes/auth.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +54,8 @@ app.use((req, res, next) => {
 });
 
 app.use('/feed', feedRoutes);
+app.use('/auth', authRouter);
+
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;

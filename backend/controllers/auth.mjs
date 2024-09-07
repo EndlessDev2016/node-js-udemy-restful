@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import User from '../models/user.mjs';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import { Op } from 'sequelize';
 import { body, validationResult, check } from 'express-validator';

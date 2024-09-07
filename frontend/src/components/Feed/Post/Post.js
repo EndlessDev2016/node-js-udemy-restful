@@ -16,7 +16,7 @@ const post = props => (
     </div>
     <div className="post__content">{props.content}</div> */}
     <div className="post__actions">
-      <Button mode="flat" link={props._id}>
+      <Button mode="flat" link={props.id}>
         View
       </Button>
       <Button mode="flat" onClick={props.onStartEdit}>

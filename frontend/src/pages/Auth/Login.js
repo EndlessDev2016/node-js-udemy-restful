@@ -26,10 +26,10 @@ class Login extends Component {
 
   inputChangeHandler = (input, value) => {
     this.setState(prevState => {
-      let isValid = true;
-      for (const validator of prevState.loginForm[input].validators) {
-        isValid = isValid && validator(value);
-      }
+      let isValid = false;
+      // for (const validator of prevState.loginForm[input].validators) {
+      //   isValid = isValid && validator(value);
+      // }
       const updatedForm = {
         ...prevState.loginForm,
         [input]: {
