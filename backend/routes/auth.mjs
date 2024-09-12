@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { putSignup } from '../controllers/auth.mjs';
+import { postLogin, putSignup } from '../controllers/auth.mjs';
 import { check, body, param, query, cookie, header } from 'express-validator';
 import User from '../models/user.mjs';
 // body, param, query, cookie, headerなどがチェックできる。
@@ -34,6 +34,10 @@ authRouter.put(
   ],
   putSignup
 );
+
+authRouter.post('/login', postLogin);
+
+
 
 //// 以下は、以前のudemyコード。参照。
 // router.get("/login", getLogin);
