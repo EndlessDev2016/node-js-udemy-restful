@@ -30,10 +30,11 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    creator: {
-      type: DataTypes.JSON, // Object型に相当するデータ型としてJSONを使用
-      allowNull: false,
-    },
+    // forgein keyとして持つことになったので、creatorは不要
+    // creator: {
+    //   type: DataTypes.JSON, // Object型に相当するデータ型としてJSONを使用
+    //   allowNull: false,
+    // },
   },
   {
     timestamps: true, // mongooseのtimestampsオプションに相当する
@@ -77,3 +78,30 @@ export default Post;
 // );
 
 // export default Post;
+
+// mongooseの場合
+// const postSchema = new Schema({
+//   title: {
+//     type: String,
+//     required: true,
+//   },
+//   imageUrl: {
+//     type: String,
+//     required: true,
+//   },
+//   content: {
+//     type: String,
+//     required: true,
+//   },
+//   creator: {
+//     type: Object,
+//     required: true,
+//   },
+//   creator: { // refを Userにしている場合。
+//     type: Schema.Types.ObjectId,
+//     ref: 'User',
+//     required: true,
+//   },
+// });
+
+

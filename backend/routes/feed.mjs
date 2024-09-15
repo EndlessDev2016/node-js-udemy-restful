@@ -7,14 +7,16 @@ import {
   updatePost,
 } from '../controllers/feed.mjs';
 import { body } from 'express-validator';
+import { isAuthMiddleware } from '../middleware/is-auth.mjs';
 
 const feedRoutes = express.Router();
 
 // GET /feed/posts
-feedRoutes.get('/posts', getPosts);
+feedRoutes.get('/posts', isAuthMiddleware, getPosts);
 
 feedRoutes.post(
   '/post',
+  isAuthMiddleware,
   [
     body('title').trim().isLength({ min: 5 }),
     body('content').trim().isLength({ min: 5 }),
@@ -22,10 +24,11 @@ feedRoutes.post(
   createPost
 );
 
-feedRoutes.get('/post/:postId', getPost);
+feedRoutes.get('/post/:postId', isAuthMiddleware, getPost);
 
 feedRoutes.put(
   '/post/:postId',
+  isAuthMiddleware,
   [
     body('title').trim().isLength({ min: 5 }),
     body('content').trim().isLength({ min: 5 }),
@@ -33,6 +36,10 @@ feedRoutes.put(
   updatePost
 );
 
-feedRoutes.delete('/post/:postId', deletePost);
+feedRoutes.delete(
+  '/post/:postId',
+
+  deletePost
+);
 
 export default feedRoutes;

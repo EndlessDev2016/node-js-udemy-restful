@@ -44,7 +44,7 @@ export const putSignup = (req, res, next) => {
     })
     .then((user) => {
       console.log(chalk.green('---putSignup user---'), user);
-      return res.status(422).json({
+      return res.status(201).json({
         message: 'User created!',
         userId: user.id,
       });
@@ -84,7 +84,7 @@ export const postLogin = (req, res, next) => {
           email: loadedUser.email,
           userId: loadedUser._id.toString(),
         },
-        'somesupersecret',
+        'somesupersecretkey',
         { expiresIn: '1h' }
       );
 

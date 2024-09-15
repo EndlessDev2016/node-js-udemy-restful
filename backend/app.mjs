@@ -56,7 +56,6 @@ app.use((req, res, next) => {
 app.use('/feed', feedRoutes);
 app.use('/auth', authRouter);
 
-
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
   const message = error.message;
@@ -67,6 +66,8 @@ app.use((error, req, res, next) => {
 
 // seqliizeのは、foreign keyを設定しなくても、
 // テーブルの関係(relation)を見て、自動的に設定してくれる。
+// hasManyには、foreignKeyなどを指定しなくても良い。
+// ただし、belongsToには、foreignKeyを指定する必要がある。
 User.hasMany(Post, {
   // foreignKey: {
   //   name: 'userId',
@@ -75,10 +76,17 @@ User.hasMany(Post, {
 });
 
 Post.belongsTo(User, {
-  // foreignKey: {
-  //   name: 'userId',
-  //   allowNull: false,
-  // },
+  foreignKey: {
+    name: 'userId',
+    allowNull: false,
+  },
+});
+
+Post.belongsTo(User, {
+  foreignKey: {
+    name: 'creatorId',
+    allowNull: false,
+  },
 });
 
 // // mysql session store options

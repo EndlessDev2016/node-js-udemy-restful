@@ -4,6 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
 import chalk from 'chalk';
+import User from '../models/user.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,11 +37,24 @@ export const getPosts = (req, res, next) => {
       next(err);
     });
 
-  Post.findAll()
+  Post.findAll({
+    include: {
+      model: User,
+      attributes: ['_id', 'name'],
+    },
+  })
     .then((posts) => {
       res.status(200).json({
         message: 'Fetched posts successfully.',
-        posts,
+        posts: posts.map((post) => ({
+          _id: post._id,
+          title: post.title,
+          content: post.content,
+          imageUrl: post.imageUrl,
+          createdAt: post.createdAt,
+          updatedAt: post.updatedAt,
+          creator: { _id: post.user._id, name: post.user.name },
+        })),
         totalItems,
       });
     })
@@ -69,20 +83,36 @@ export const createPost = (req, res, next) => {
   const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
+  let creator;
   const post = new Post({
     title,
     content,
     imageUrl,
-    creator: { name: 'Lee Seunghun' },
+    userId: req.userId,
+    creatorId: req.userId,
   });
 
   post
     .save()
     .then((result) => {
-      // TODO: response
+      return User.findByPk(req.userId);
+    })
+    .then((user) => {
+      creator = user;
+      // mongooseの場合は、以下になる。
+      // user.posts.push(post);
+      user.createPost({
+        title,
+        content,
+        imageUrl,
+      });
+      return user.save();
+    })
+    .then((result) => {
       res.status(201).json({
         message: 'Post created successfully!',
-        post: result,
+        post: { post, creator: { _id: creator._id, name: creator.name } },
+        creator: { _id: creator._id, name: creator.name },
       });
     })
     .catch((err) => {
