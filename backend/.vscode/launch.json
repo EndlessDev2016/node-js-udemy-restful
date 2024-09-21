@@ -5,7 +5,7 @@
       "type": "node",
       "request": "launch",
       "name": "Launch app.mjs",
-      "program": "${workspaceFolder}/backend/app.mjs",
+      "program": "${workspaceFolder}/app.mjs",
       "runtimeArgs": ["--experimental-modules"],
       "env": {
         "NODE_ENV": "development"

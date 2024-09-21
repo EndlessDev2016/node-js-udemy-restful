@@ -83,7 +83,6 @@ export const createPost = (req, res, next) => {
   const imageUrl = req.file.path;
   const title = req.body.title;
   const content = req.body.content;
-  let creator;
   const post = new Post({
     title,
     content,
@@ -97,22 +96,12 @@ export const createPost = (req, res, next) => {
     .then((result) => {
       return User.findByPk(req.userId);
     })
-    .then((user) => {
-      creator = user;
-      // mongooseの場合は、以下になる。
-      // user.posts.push(post);
-      user.createPost({
-        title,
-        content,
-        imageUrl,
-      });
-      return user.save();
-    })
     .then((result) => {
+      console.log(chalk.bgGreenBright('createPost :: ', result));
       res.status(201).json({
         message: 'Post created successfully!',
-        post: { post, creator: { _id: creator._id, name: creator.name } },
-        creator: { _id: creator._id, name: creator.name },
+        post: { post, creator: { _id: result._id, name: result.name } },
+        creator: { _id: result._id, name: result.name },
       });
     })
     .catch((err) => {
@@ -143,6 +132,14 @@ export const getPost = (req, res, next) => {
     });
 };
 
+/**
+ * updatePost
+ * @param req - Request
+ * @param res - Response
+ * @param next - Next
+ * @description
+ * Update post
+ */
 export const updatePost = (req, res, next) => {
   const postId = req.params.postId;
   const title = req.body.title;
@@ -159,11 +156,19 @@ export const updatePost = (req, res, next) => {
     throw error;
   }
 
+  // PostテーブルからpostIdを検索する。
   Post.findByPk(postId)
     .then((post) => {
       if (!post) {
         const error = new Error('Could not find post.');
         error.statusCode = 404;
+        throw error;
+      }
+
+      // postのcreatorIdとreq.userIdが異なる場合、エラーを返す。
+      if (post.creatorId !== req.userId) {
+        const error = new Error('Not authorized update post.');
+        error.statusCode = 403;
         throw error;
       }
 
@@ -199,6 +204,13 @@ export const deletePost = (req, res, next) => {
         error.statusCode = 404;
         throw error;
       }
+
+      if (post.creatorId !== req.userId) {
+        const error = new Error('Not authorized delete post.');
+        error.statusCode = 403;
+        throw error;
+      } 
+
       clearImage(post.imageUrl);
       // mongooseは、findByIdAndRemove()を使うことができる。
       // sequelizeは、destroy()を使う。

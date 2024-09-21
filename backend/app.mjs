@@ -82,13 +82,6 @@ Post.belongsTo(User, {
   },
 });
 
-Post.belongsTo(User, {
-  foreignKey: {
-    name: 'creatorId',
-    allowNull: false,
-  },
-});
-
 // // mysql session store options
 // const options = {
 //   host: 'localhost',

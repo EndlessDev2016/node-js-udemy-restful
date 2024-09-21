@@ -30,6 +30,10 @@ const Post = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    creatorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     // forgein keyとして持つことになったので、creatorは不要
     // creator: {
     //   type: DataTypes.JSON, // Object型に相当するデータ型としてJSONを使用
